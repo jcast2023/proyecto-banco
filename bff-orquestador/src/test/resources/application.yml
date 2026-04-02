@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: bff-orquestador
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          #issuer-uri: http://localhost:8090/realms/banco-realm
+          jwk-set-uri: http://keycloak-banco:8080/realms/banco-realm/protocol/openid-connect/certs
+  springdoc:
+    api-docs:
+      path: /v3/api-docs
+    swagger-ui:
+      # Esta ruta debe coincidir con lo que permitiste en SecurityConfig
+      path: /swagger-ui.html
+      operations-sorter: alpha
+      # Importante para WebFlux
+      use-root-path: true
+    cache:
+      disabled: true
+
+clientes:
+  service:
+    url: http://ms-clientes:8081
+productos:
+  service:
+    url: http://ms-productos:8082
+
+logging:
+  level:
+    com.banco.bff: DEBUG
+    org.springframework.security: DEBUG

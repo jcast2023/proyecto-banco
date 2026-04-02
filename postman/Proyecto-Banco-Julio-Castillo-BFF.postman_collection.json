@@ -1,0 +1,77 @@
+{
+  "info": {
+    "_postman_id": "2aa4ca38-34aa-49f1-b0cd-da713adfecc8",
+    "name": "Proyecto-Banco-Julio-Castillo-BFF",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "44516379"
+  },
+  "item": [
+    {
+      "name": "Obtener Detalle Integral Cliente",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "clientId",
+        "value": "backend-client",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "http://localhost:8090/realms/banco-realm/protocol/openid-connect/token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "http://localhost:8090/realms/banco-realm/protocol/openid-connect/auth",
+        "type": "string"
+      },
+      {
+        "key": "clientSecret",
+        "value": "NFharzmELzGe9KZpwf7eWFvY04HOq9mZ",
+        "type": "string"
+      },
+      {
+        "key": "tokenName",
+        "value": "Token-BFF",
+        "type": "string"
+      },
+      {
+        "key": "addTokenTo",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+version: '3.8'
+
+services:
+  postgres-banco:
+    image: postgres:15-alpine
+    container_name: postgres-banco
+    environment:
+      POSTGRES_DB: banco
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d banco"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - banco-network
+
+  keycloak-banco:
+    image: quay.io/keycloak/keycloak:25.0
+    container_name: keycloak-banco
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME_STRICT: "false"
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres-banco
+      KC_DB_URL_PORT: 5432
+      KC_DB_URL_DATABASE: banco
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: admin123
+      # Agregado para evitar problemas de proxy en Docker
+      KC_HTTP_ENABLED: "true"
+    ports:
+      - "8090:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080 && echo -e \"GET /health/live HTTP/1.1\\r\\nHost: localhost\\r\\n\\r\\n\" >&3 && grep \"UP\" <&3"]
+      interval: 10s
+      timeout: 10s
+      retries: 15
+      start_period: 40s
+    depends_on:
+      postgres-banco:
+        condition: service_healthy
+    networks:
+      - banco-network
+
+  ms-clientes:
+    build: ./ms-clientes
+    container_name: ms-clientes
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      # Sobreescribimos la URL para que use el nombre del servicio en Docker
+      SPRING_R2DBC_URL: r2dbc:postgresql://postgres-banco:5432/banco
+    depends_on:
+      postgres-banco:
+        condition: service_healthy
+    networks:
+      - banco-network
+
+  ms-productos:
+    build: ./ms-productos
+    container_name: ms-productos
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_R2DBC_URL: r2dbc:postgresql://postgres-banco:5432/banco
+    depends_on:
+      postgres-banco:
+        condition: service_healthy
+    networks:
+      - banco-network
+
+  bff-orquestador:
+    build: ./bff-orquestador
+    container_name: bff-orquestador
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      ms-clientes:
+        condition: service_started
+      ms-productos:
+        condition: service_started
+      keycloak-banco:
+        condition: service_started # Cambiado a healthy
+    networks:
+      - banco-network
+
+networks:
+  banco-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: ms-clientes
+
+  r2dbc:
+    url: r2dbc:postgresql://postgres-banco:5432/banco
+    username: admin
+    password: admin123
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak-banco:8080/realms/banco-realm/protocol/openid-connect/certs
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+
+server:
+  port: 8081
+
+logging:
+  level:
+    com.banco.clientes: DEBUG

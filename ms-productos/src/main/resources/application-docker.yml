@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: ms-productos
+
+  r2dbc:
+    url: r2dbc:postgresql://postgres-banco:5432/banco
+    username: admin
+    password: admin123
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak-banco:8080/realms/banco-realm/protocol/openid-connect/certs
+
+server:
+  port: 8082
+
+logging:
+  level:
+    com.banco.productos: DEBUG

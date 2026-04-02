@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: bff-orquestador
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak-banco:8080/realms/banco-realm/protocol/openid-connect/certs
+
+# URLs de los microservicios internos (dentro de Docker)
+clientes:
+  service:
+    url: http://ms-clientes:8081
+productos:
+  service:
+    url: http://ms-productos:8082
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.banco.bff: DEBUG
+    org.springframework.security: DEBUG

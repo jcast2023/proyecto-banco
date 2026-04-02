@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: ms-productos
+  
+  r2dbc:
+    url: r2dbc:postgresql://postgres-banco:5432/banco
+    username: admin
+    password: admin123
+
+  # Al usar R2DBC, esta es la forma estándar de inicializar
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak-banco:8080/realms/banco-realm/protocol/openid-connect/certs
+  springdoc:
+    api-docs:
+      path: /v3/api-docs
+    swagger-ui:
+      # Esta ruta debe coincidir con lo que permitiste en SecurityConfig
+      path: /swagger-ui.html
+      operations-sorter: alpha
+      # Importante para WebFlux
+      use-root-path: true
+    cache:
+      disabled: true
+
+server:
+  port: 8082
+
+logging:
+  level:
+    com.banco.productos: DEBUG
