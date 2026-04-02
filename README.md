@@ -27,6 +27,7 @@ Este proyecto implementa una arquitectura de microservicios para la gestión int
 Desde la terminal en la raíz del proyecto, ejecuta:
 ```bash
 docker-compose up -d --build
+```
 ### 3. Configuración de Keycloak
 El servidor corre en: http://localhost:8090 (Admin: admin / admin).
 Realm utilizado: banco-realm.
